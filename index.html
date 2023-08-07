@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<style>
+body {
+    font-family: monospace;
+    background-color: #0c1021;
+    color: #00ff00;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.container {
+    text-align: center;
+}
+
+h1 {
+    font-size: 28px;
+}
+
+#terminal {
+    border: 2px solid #00ff00;
+    background-color: #0c1021;
+    width: 400px;
+    height: 300px;
+    overflow: auto;
+    padding: 10px;
+}
+
+#output {
+    font-size: 14px;
+}
+
+button {
+    margin-top: 10px;
+    background-color: #00ff00;
+    color: #0c1021;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.input-container {
+    margin-top: 20px;
+}
+
+input[type="text"] {
+    padding: 5px;
+    font-size: 14px;
+}
+
+.buttons {
+    margin-top: 20px;
+}
+
+label {
+    margin-right: 10px;
+}
+</style>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⟅UӜ⟆Hacking Tool</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>⟅UӜ⟆Hacking Tool</h1>
+        <div id="terminal">
+            <pre id="output"></pre>
+        </div>
+        <div class="input-container">
+            <input type="text" id="targetInput" placeholder="Inserisci l'username o il numero">
+            <button onclick="hackTarget()" id="hackButton">Hack</button>
+            <button onclick="stopHacking()" id="stopButton" style="display: none;">Stop Hacking</button>
+        </div>
+        <div class="buttons">
+            <input type="radio" id="tiktok" name="platform" value="TikTok" checked>
+            <label for="tiktok">TikTok</label>
+            <input type="radio" id="whatsapp" name="platform" value="WhatsApp">
+            <label for="whatsapp">WhatsApp</label>
+            <input type="radio" id="instagram" name="platform" value="Instagram">
+            <label for="instagram">Instagram</label>
+        </div>
+    </div>
+    <script>
+const terminal = document.getElementById("output");
+let hackingFlag = false;
+let hackingInterval = null;
+
+const messages = {
+    TikTok: [
+        "Connessione a TikTok in corso...",
+        "Decodifica dei dati...",
+        "Accesso a TikTok ottenuto per @",
+        "Avvio di segnalazioni...",
+        "Segnalazioni inviate: ",
+        "Hacking di TikTok completato.",
+    ],
+    WhatsApp: [
+        "Connessione a WhatsApp in corso...",
+        "Decodifica delle chat...",
+        "Accesso a WhatsApp ottenuto per il numero",
+        "Avvio di segnalazioni...",
+        "Segnalazioni inviate: ",
+        "Hacking di WhatsApp completato.",
+    ],
+    Instagram: [
+        "Connessione a Instagram in corso...",
+        "Decodifica dei dati...",
+        "Accesso a Instagram ottenuto per @",
+        "Avvio di segnalazioni...",
+        "Segnalazioni inviate: ",
+        "Hacking di Instagram completato.",
+    ],
+};
+
+function hackTarget() {
+    const targetInput = document.getElementById("targetInput");
+    const target = targetInput.value;
+    const selectedPlatform = document.querySelector('input[name="platform"]:checked').value;
+
+    if (target.trim() === "") {
+        alert("Inserisci un username o un numero valido.");
+        return;
+    }
+
+    hackingFlag = true; // Imposta il flag su true per avviare l'hacking
+    toggleButtons();
+    terminal.innerHTML = ""; // Resetta l'output
+    simulateHacking(selectedPlatform, target);
+    simulateNumbers(target);
+}
+
+function stopHacking() {
+    hackingFlag = false; // Imposta il flag su false per interrompere l'hacking
+    clearInterval(hackingInterval);
+    toggleButtons();
+}
+
+function toggleButtons() {
+    const hackButton = document.getElementById("hackButton");
+    const stopButton = document.getElementById("stopButton");
+
+    hackButton.disabled = hackingFlag; // Disabilita il pulsante Hack se l'hacking è in corso
+    stopButton.style.display = hackingFlag ? "inline-block" : "none"; // Mostra il pulsante Stop Hacking solo se l'hacking è in corso
+}
+
+function simulateHacking(platform, target) {
+    let shuffledMessages = shuffleArray(messages[platform]);
+    let totalReports = 0;
+    for (let i = 0; i < shuffledMessages.length; i++) {
+        setTimeout(() => {
+            let message = shuffledMessages[i];
+            if (message.includes("Segnalazioni inviate: ")) {
+                if (totalReports < 3) {
+                    totalReports++;
+                } else if (totalReports < 3000) {
+                    totalReports += 50; // Velocità di simulazione più veloce
+                } else {
+                    totalReports += 1000; // Velocità di simulazione ancora più veloce
+                }
+                message += totalReports;
+            } else {
+                message = message.replace("@", target);
+                message = message.replace("il numero", target);
+            }
+            if (hackingFlag) {
+                terminal.innerHTML += message + "\n";
+                terminal.scrollTop = terminal.scrollHeight;
+            }
+        }, 150 * i); // Velocità di simulazione iniziale più lenta
+    }
+}
+
+function simulateNumbers(target) {
+    let counter = 1;
+
+    function displayNumber() {
+        if (hackingFlag) {
+            terminal.innerHTML += "Segnalazioni inviate: " + counter + "\n";
+            terminal.scrollTop = terminal.scrollHeight;
+        }
+        counter++;
+        if (counter <= 3) {
+            hackingInterval = setTimeout(displayNumber, 2000); // Ritardo di 2 secondi tra ciascun numero
+        } else {
+            displayManyNumbers();
+        }
+    }
+
+    function displayManyNumbers() {
+        for (let i = counter; i <= 999; i++) {
+            if (!hackingFlag) {
+                break;
+            }
+            terminal.innerHTML += "Segnalazioni inviate: " + i + "\n";
+            terminal.scrollTop = terminal.scrollHeight;
+        }
+    }
+
+    displayNumber();
+}
+
+function shuffleArray(array) {
+    // Funzione per mescolare casualmente un array
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+}
+
+</script>
+</body>
+</html>
